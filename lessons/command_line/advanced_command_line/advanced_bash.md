@@ -17,7 +17,6 @@ and make sure that it says something like `/bin/bash` (or really anything that
 ends in `bash`. There are other command line interfaces, but we'll be using
 BASH for our scripting.
 
-
 ## Getting Data
 
 Let's get some data to play with. If you're on mac you can use:
@@ -29,17 +28,18 @@ https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data
 ```
 
 This grabs the data from https location, and downloads it to your machine. Now
-if you don't put the ` > file_name_here`, then it just displays the file in 
+if you don't put the ` > file_name_here`, then it just displays the file in
 the terminal. The arrow says, "put this into whatever file name I give you."
 
 In linux you can do:
+
 ```bash
 wget
 https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data
 > data.txt
 ```
 
-for the same effect. 
+for the same effect.
 
 ## Manipulating Data with `sed`
 
@@ -99,9 +99,10 @@ do
   curl https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data > data$i.txt
 done
 ```
+
 > Heads up: You may have to swap in `wget` for `curl` in your version
 
-The first line tells the terminal to execute this as a BASH script. This is called a 'shebang' for reasons I have no idea about. Then this code loops through 10 times (`seq 0 10` is sequence from 0 to 10), and does whatever is in the `do`-`done` loop. In this case, it runs a `curl` and pushes the data into a text file. Note the `data$i.txt`. The dollar sign is BASH for "thi  is a variable name I want you to unpack."
+The first line tells the terminal to execute this as a BASH script. This is called a 'shebang' for reasons I have no idea about. Then this code loops through 10 times (`seq 0 10` is sequence from 0 to 10), and does whatever is in the `do`-`done` loop. In this case, it runs a `curl` and pushes the data into a text file. Note the `data$i.txt`. The dollar sign is BASH for "thi is a variable name I want you to unpack."
 
 If I run this with `bash load_data_batches.sh`, then I run `ls` and see that I
 have data in 11 different files now!
@@ -126,13 +127,12 @@ done
 This `for` is a bit different. It's not iterating through a range, it's
 iterating through the return of another bash call. So we asked it to show us
 all files that have the name `data##.txt` where `##` is in the range 0-10.
-That's another bash thing. Try it on your terminal, just type `ls
-data{0..10}.txt` and you should see all of the files. By wrapping this inside
+That's another bash thing. Try it on your terminal, just type `ls data{0..10}.txt` and you should see all of the files. By wrapping this inside
 of a `$( )`, we're telling bash to treat this as a stand alone to command and
 then use the output of that as something to unpack.
 
 Then we go into the loop, and run `sed` to change the `?` to `nan`. Note that
-I actually changed `?  ` into `nan` in order to preserve some spacing stuff
+I actually changed `? ` into `nan` in order to preserve some spacing stuff
 incase I later need to split on spaces or something.
 
 This has more about [BASH
@@ -178,14 +178,14 @@ more about that.
 There are many repeated actions that need to happen all the time in business.
 Some examples:
 
-* Everynight, go to the database of "today's sales" and move them into the
-"long-term storage database"
-* Prepare a weekly report by querying the database in the same way every week
-* Do model/code testing on a regular interval to make sure the model is
-responding as expected.
+- Everynight, go to the database of "today's sales" and move them into the
+  "long-term storage database"
+- Prepare a weekly report by querying the database in the same way every week
+- Do model/code testing on a regular interval to make sure the model is
+  responding as expected.
 
 To handle this, the command line has a tool called CRON which allows us to
-schedule when something should happen. 
+schedule when something should happen.
 
 So let's imagine we wanted to download data and clean it every day, I could
 create a script called, `job_manager.sh` that does this:
@@ -276,7 +276,7 @@ ps -ef | grep python
 ```
 
 which will show me all of the processes that are running that have python in
-the name. 
+the name.
 
 So if I want to run over a bunch of files I could do something like a bash
 script:
@@ -295,9 +295,8 @@ don't have to run sequentially, because they are all allowed to spawn as
 individual processes. They will then claim resources as they come available
 and run themselves, writing out their log files to the logs I've specified.
 It's a great way to do batch processing. The `screen` command can also be used
-for this.  It's less ideal because it involves a lot of simulating tabs and
-  is messier, but some people do that.
-
+for this. It's less ideal because it involves a lot of simulating tabs and
+is messier, but some people do that.
 
 ## General Discussion of when I use the command line
 
@@ -306,34 +305,33 @@ overhead of Python or compilation of C++. It's great. That said, it does have
 its limits. So these are some examples of when I tend to use command
 line/BASH scripts:
 
-* The task involves manipulating a lot of files
-* The task involves changing the same thing over and over in a file, so `sed`
-will work well
-* I want to repeat the same job many times, so I write a BASH script
-* I want to put chains of things together, so do X, then when X finishes do Y,
-then when Y finishes do Z... I can use a bash script to manage those
-processes.
-* I want to do hyperspecific file finding/manipulation
-* I want to check out what's inside of a file without having to load the whole
-thing
-* I write a log file and use `tail -f` to have the log file print to my screen
-in real time
-* I want to talk to a database, but don't want to have all of the overhead of
-loading up the full version of python or `psql`
-* I want to launch a bunch of jobs independently, so "run a python job on each
-of these files." I then use a bash script to start a python instance on each
-one.
+- The task involves manipulating a lot of files
+- The task involves changing the same thing over and over in a file, so `sed`
+  will work well
+- I want to repeat the same job many times, so I write a BASH script
+- I want to put chains of things together, so do X, then when X finishes do Y,
+  then when Y finishes do Z... I can use a bash script to manage those
+  processes.
+- I want to do hyperspecific file finding/manipulation
+- I want to check out what's inside of a file without having to load the whole
+  thing
+- I write a log file and use `tail -f` to have the log file print to my screen
+  in real time
+- I want to talk to a database, but don't want to have all of the overhead of
+  loading up the full version of python or `psql`
+- I want to launch a bunch of jobs independently, so "run a python job on each
+  of these files." I then use a bash script to start a python instance on each
+  one.
 
 # Other cool command line tools I didn't mention yet
 
-* [Screen](https://www.gnu.org/software/screen/manual/screen.html)
-* [awk](https://linux.die.net/man/1/awk)
-* [time](https://linux.die.net/man/1/time)
-* [ifconfig](https://en.wikipedia.org/wiki/Ifconfig)
-* [du](https://linux.die.net/man/1/du)
-* [df](https://linux.die.net/man/1/df)
-* The things here: https://www.tecmint.com/useful-linux-commands-for-newbies/
-
+- [Screen](https://www.gnu.org/software/screen/manual/screen.html)
+- [awk](https://linux.die.net/man/1/awk)
+- [time](https://linux.die.net/man/1/time)
+- [ifconfig](https://en.wikipedia.org/wiki/Ifconfig)
+- [du](https://linux.die.net/man/1/du)
+- [df](https://linux.die.net/man/1/df)
+- The things here: https://www.tecmint.com/useful-linux-commands-for-newbies/
 
 # There's now a whole book on this with a free access page!
 
